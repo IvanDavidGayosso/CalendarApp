@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 
 import '../../styles/modal.css';
 import { uiCloseModal } from '../../actions/ui';
-import { eventAddNew, eventClearActiveEvent, eventUpdate } from '../../actions/events';
+import { eventClearActiveEvent, eventStartAddNew, eventStartUpdate } from '../../actions/events';
 
 
 
@@ -107,16 +107,9 @@ export const CalendarModal = () => {
         }
 
         if ( activeEvent ){
-            dispatch( eventUpdate( formValues ) );
+            dispatch( eventStartUpdate( formValues ) );
         }else{
-            dispatch( eventAddNew({
-                ...formValues,
-                id: new Date().getTime(),
-                user:{
-                    _id: '123456',
-                    name: 'Ivan David'
-                }
-            }) );
+            dispatch( eventStartAddNew( formValues ) );
         }
 
         setTitleValid( true );
@@ -145,7 +138,7 @@ export const CalendarModal = () => {
                     <label>Fecha y hora inicio</label>
                     <DateTimePicker
                         onChange={ handleStartDateChange }
-                        value={ dateStart }
+                        value={ (activeEvent) ? activeEvent.start : dateStart }
                         className="form-control"
                     />
                 </div>
@@ -154,7 +147,7 @@ export const CalendarModal = () => {
                     <label>Fecha y hora fin</label>
                     <DateTimePicker
                         onChange={ handleEndDateChange }
-                        value={ dateEnd }
+                        value={ (activeEvent) ? activeEvent.end : dateEnd }
                         minDate= { dateStart }
                         className="form-control"
                     />
